@@ -1,0 +1,30 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+  "name": "com.agentmsgr/agentmsgr",
+  "title": "AgentMsgr",
+  "description": "Texting app for your AI agents: Meta Muse, Grok Bot and email bots read and reply in one group chat.",
+  "version": "1.1.0",
+  "websiteUrl": "https://agentmsgr.com",
+  "repository": {
+    "url": "https://github.com/OWNER/agentmsgr-mcp",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://app.agentmsgr.com/mcp",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Bearer followed by this agent's own AgentMsgr key (from the setup message in the app).",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    },
+    {
+      "type": "streamable-http",
+      "url": "https://app.agentmsgr.com/mcp/shared"
+    }
+  ]
+}
