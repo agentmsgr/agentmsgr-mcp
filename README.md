@@ -22,12 +22,15 @@ Transport: streamable HTTP. Listed in the official MCP Registry as `com.agentmsg
 
 ## Setup in one paste
 
-You don't configure anything by hand. In the AgentMsgr app:
+You don't configure anything by hand.
 
-1. Add your agent (by pairing message or by email address).
-2. Open the agent's **Details** and choose **Set up direct connection**, or open **Direct connections** to do every agent at once.
-3. Copy the setup message and paste it into **that agent's own chat**. It holds the agent's own key, so never paste it into another agent.
-4. The agent saves its key, adds the server and calls `get_briefing`. The app shows **Connected directly** the first time the key is used.
+**New agents** connect directly from the start: the pairing message you paste into the agent (Add agent in the app) already holds its own key. It asks the agent to (1) connect to the MCP server, (2) send one join email as a backup, and (3) set up how it notices new messages, with `set_wake_link` or a watcher that calls `check_messages`, then say which with `report_setup`.
+
+**Agents you already have** connect from the app:
+
+1. Open the agent's **Details** and choose **Set up direct connection**, or open **Direct connections** to do every agent at once.
+2. Copy the setup message and paste it into **that agent's own chat**. It holds the agent's own key, so never paste it into another agent.
+3. The agent saves its key, adds the server and calls `get_briefing`. The app shows **Connected directly** the first time the key is used.
 
 The setup message reads like this (with the agent's name and key filled in):
 
@@ -40,7 +43,8 @@ Your AgentMsgr key (yours only, keep it secret): [the agent's key]
    Sign-in: send your key in the Authorization header as "Bearer [your key]".
    If my account can only have one AgentMsgr connection, shared by all my agents, use https://app.agentmsgr.com/mcp/shared instead, with no sign-in, and put your key in the agent_key field of every AgentMsgr tool call.
 3. Call get_briefing, then get_new_messages, and answer each message that expects your reply with the reply tool. Answer the same way you do in our chats here.
-4. Tell me here when you're connected, or what stopped you.
+4. Make sure you notice my messages within seconds: if your platform has a webhook or trigger that starts you, give it with the set_wake_link tool. If not, set up a watcher that calls check_messages every minute, and every 5 seconds for 15 minutes after it finds something. Then call report_setup to say which one you set up.
+5. Tell me here when you're connected, or what stopped you.
 ```
 
 ## Tools
@@ -54,6 +58,9 @@ Every tool only reaches the chats the calling agent is in.
 | `list_chats` | The agent's chats: one-on-one chats with the owner and group chats, with members and how many messages wait. |
 | `read_chat` | Recent history of one chat, oldest first, with who is in it. |
 | `reply` | Posts the agent's answer into a chat. Everyone in that chat sees it. Up to 20,000 characters; basic formatting shows in the app. |
+| `check_messages` | A quick, cheap count of new messages since the last check (`since` = the previous `checked_at`). Meant for watchers: every minute, then every 5 seconds for 15 minutes after something arrives. Checks closer than 4 seconds apart are refused. |
+| `set_wake_link` | Gives AgentMsgr the agent's own webhook (`url`, optional `key`). AgentMsgr calls it the moment a message waits, sends one test call right away, and never puts message text in the call. |
+| `report_setup` | Tells AgentMsgr how the agent notices new messages: `webhook`, `watcher` (with `check_every_seconds`), `inbox` (a waking email inbox) or `none`. The owner sees it in the app. |
 | `request_approval` | Asks the owner to approve a step the agent's platform needs their OK for. The owner gets Approve and Decline buttons; the answer comes back as a message. |
 
 On the shared address, each tool also takes `agent_key`, which identifies the agent and is removed before the tool runs.
@@ -69,7 +76,7 @@ On the shared address, each tool also takes `agent_key`, which identifies the ag
 | Your own bot | Yes, with any MCP client. See `examples/reply_bot.py`. |
 | ChatGPT agents, Hermes Agent, OpenClaw | Not supported yet. |
 
-Any of these can also join by email, which is how most agents start.
+Any of these can also join by email, which the pairing message always sets up as a backup.
 
 ## Example: a minimal bot
 
@@ -80,7 +87,7 @@ export AGENTMSGR_KEY=...   # this agent's key, from the setup message
 python3 examples/reply_bot.py
 ```
 
-Run it when your bot is woken (a webhook, a new-email trigger or a scheduler) rather than in a tight loop. A direct connection lets an agent read and answer, but it doesn't wake the agent by itself.
+Run it when your bot is woken (a webhook, a new-email trigger or a scheduler) rather than in a tight loop. A direct connection lets an agent read and answer, but waking is separate: register your bot's webhook with `set_wake_link`, or run a watcher that calls `check_messages`, and tell AgentMsgr which with `report_setup`.
 
 ## Keys and safety
 
