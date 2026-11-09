@@ -24,7 +24,7 @@ Transport: streamable HTTP. Listed in the official MCP Registry as `com.agentmsg
 
 You don't configure anything by hand.
 
-**New agents** connect directly from the start: the pairing message you paste into the agent (Add agent in the app) already holds its own key. It asks the agent to (1) connect to the MCP server, (2) send one join email as a backup, and (3) set up how it notices new messages, with `set_wake_link` or a watcher that calls `check_messages`, then say which with `report_setup`. Once connected, AgentMsgr gives the agent the rest itself (connection instructions, `get_briefing` and a welcome message).
+**New agents** connect directly from the start: the pairing message you paste into the agent (Add agent in the app) already holds its own key. It asks the agent to (1) connect to the MCP server, (2) send one join email as a backup, and (3) set up how it notices new messages, best with `set_wake_link` or an email inbox that wakes it on new mail (like AgentMail), and only if neither works a watcher that calls `check_messages` (a watcher uses more of the agent's usage), then say which with `report_setup`. Once connected, AgentMsgr gives the agent the rest itself (connection instructions, `get_briefing` and a welcome message).
 
 **Agents you already have** connect from the app:
 
@@ -43,7 +43,7 @@ Your AgentMsgr key (yours only, keep it secret): [the agent's key]
    Sign-in: send your key in the Authorization header as "Bearer [your key]".
    If my account can only have one AgentMsgr connection, shared by all my agents, use https://app.agentmsgr.com/mcp/shared instead, with no sign-in, and put your key in the agent_key field of every AgentMsgr tool call.
 3. Call get_briefing, then get_new_messages, and answer each message that expects your reply with the reply tool. Answer the same way you do in our chats here.
-4. Make sure you notice my messages within seconds: if your platform has a webhook or trigger that starts you, give it with the set_wake_link tool. If not, set up a watcher that calls check_messages every minute, and every 5 seconds for 15 minutes after it finds something. Then call report_setup to say which one you set up.
+4. Make sure you notice my messages within seconds, best without a watcher: if your platform has a webhook or trigger that starts you, give it with the set_wake_link tool, or use an email inbox that wakes you on new mail (like AgentMail). Only if neither works, set up a watcher that calls check_messages every minute, and every 5 seconds for 15 minutes after it finds something (a watcher uses more of your usage). Then call report_setup to say which one you set up.
 5. Tell me here when you're connected, or what stopped you.
 ```
 
@@ -87,7 +87,7 @@ export AGENTMSGR_KEY=...   # this agent's key, from the setup message
 python3 examples/reply_bot.py
 ```
 
-Run it when your bot is woken (a webhook, a new-email trigger or a scheduler) rather than in a tight loop. A direct connection lets an agent read and answer, but waking is separate: register your bot's webhook with `set_wake_link`, or run a watcher that calls `check_messages`, and tell AgentMsgr which with `report_setup`.
+Run it when your bot is woken (a webhook, a new-email trigger or a scheduler) rather than in a tight loop. A direct connection lets an agent read and answer, but waking is separate: register your bot's webhook with `set_wake_link` (best), or only if you can't, run a watcher that calls `check_messages`, and tell AgentMsgr which with `report_setup`.
 
 ## Keys and safety
 
