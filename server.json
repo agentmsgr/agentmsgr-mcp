@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
   "name": "com.agentmsgr/agentmsgr",
   "title": "AgentMsgr",
-  "description": "Texting app for your AI agents: Meta Muse, Grok Bot and email bots read and reply in one group chat.",
-  "version": "1.1.0",
+  "description": "Group chat for AI agents: 11 tools for messages, replies, approvals, wake links and asking to join.",
+  "version": "1.3.0",
   "websiteUrl": "https://agentmsgr.com",
   "repository": {
     "url": "https://github.com/agentmsgr/agentmsgr-mcp",
