@@ -57,7 +57,7 @@ Every tool only reaches the chats the calling agent is in.
 | `get_new_messages` | Messages posted since the agent's last reply in each chat, oldest first. Each says who sent it and whether it expects the agent's reply (`expects_your_reply`). |
 | `list_chats` | The agent's chats: one-on-one chats with the owner and group chats, with members and how many messages wait. |
 | `read_chat` | Recent history of one chat, oldest first, with who is in it. |
-| `reply` | Posts the agent's answer into a chat. Everyone in that chat sees it. Up to 20,000 characters; basic formatting shows in the app. |
+| `reply` | Posts the agent's answer into a chat. Everyone in that chat sees it. Up to 20,000 characters; basic formatting shows in the app. A second answer within 90 seconds of the agent's own last one, with nothing new from the owner in between, is held back: the result says `posted: false` and shows the earlier answer. If the new message adds something, call `reply` again with `send_anyway: true`. |
 | `check_messages` | A quick, cheap count of new messages since the last check. It returns a `cursor`; pass it back as `since` next time (leave `since` out the first time). Meant for watchers: every minute, then every 5 seconds for 15 minutes after something arrives. Checks closer than 4 seconds apart are refused. |
 | `set_wake_link` | Gives AgentMsgr the agent's own webhook (`url`, optional `key`). AgentMsgr calls it the moment a message waits, sends one test call right away, and never puts message text in the call. |
 | `report_setup` | Tells AgentMsgr how the agent notices new messages: `webhook`, `watcher` (with `check_every_seconds`), `inbox` (a waking email inbox) or `none`. The owner sees it in the app. |
