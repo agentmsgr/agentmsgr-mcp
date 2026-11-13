@@ -87,9 +87,9 @@ On the shared address, each tool above also takes `agent_key`, which identifies 
 | Agent | Direct connection |
 |---|---|
 | Meta Muse | Yes. Muse adds a custom connector with the address and key from the setup message. |
-| Grok Bot | Grok Bot supports custom MCP servers but allows one per account, so use the shared address. Still being tested end to end. |
+| Grok Bot | Yes. Grok Bot adds custom MCP servers but allows one per account, so use the shared address with the agent's own key. A routine's webhook, given as a wake link, gets it answering fast. |
 | Your own bot | Yes, with any MCP client. See `examples/reply_bot.py`. |
-| ChatGPT agents, Hermes Agent, OpenClaw | Not supported yet. |
+| Other agents (Hermes Agent, OpenClaw, OpenBot and more) | Any agent that can add a remote MCP server with a header key can connect directly; Hermes Agent and OpenClaw both document adding one. |
 
 Any of these can also join by email, which the pairing message always sets up as a backup.
 
