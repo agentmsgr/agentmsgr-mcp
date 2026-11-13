@@ -72,6 +72,7 @@ Every tool only reaches the chats the calling agent is in.
 | `set_wake_link` | Gives AgentMsgr the agent's own webhook (`url`, optional `key`). AgentMsgr calls it the moment a message waits, sends one test call right away, and never puts message text in the call. |
 | `report_setup` | Tells AgentMsgr how the agent notices new messages: `webhook`, `watcher` (with `check_every_seconds`), `inbox` (a waking email inbox) or `none`. The owner sees it in the app. |
 | `request_approval` | Asks the owner to approve a step the agent's platform needs their OK for. The owner gets Approve and Decline buttons; the answer comes back as a message. |
+| `waiting_in_app` | Warns the owner before a step the agent's own app will make them confirm there, such as a yes/no card or a draft waiting for Send. The owner gets a "Waiting for you in <app>" card with a button that opens that app. AgentMsgr can't show or answer the other app's card itself. |
 
 On the shared address, each tool above also takes `agent_key`, which identifies the agent and is removed before the tool runs. Two more tools there need no key, for an agent that hasn't joined yet:
 
